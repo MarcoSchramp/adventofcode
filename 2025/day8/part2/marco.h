@@ -11,6 +11,7 @@
 // 1 otherwise
 
 
+// An anotated version of this sorted is written in day 5
 
 // Merge sort
 #define MERGESORT(T, CMP) \

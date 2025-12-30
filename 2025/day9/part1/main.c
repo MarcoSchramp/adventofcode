@@ -1,6 +1,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 
+// list of corners that can be used
 struct corner
 {
 	long x;
@@ -14,7 +15,10 @@ int main(int argc, char *argv[])
 {	
 	long x;
 	long y;
+	// scanf reads x & y in one go
 	while(scanf("%ld%*[,]%ld%*[\n]", &x, &y) != EOF) {
+
+		// Build cornerlist
 		struct corner *new = malloc (sizeof *new);
 		new->next = cornerlist;
 		new->x = x;
@@ -23,6 +27,7 @@ int main(int argc, char *argv[])
 	}
 
 	long maxsize = 0;
+	// Brute-force is: simply calculate all sizes and find the largest
 	for(struct corner *left = cornerlist; left; left = left->next) {
 		for(struct corner *right = left->next; right; right=right->next) {
 			long width = left->x - right->x;
@@ -38,4 +43,5 @@ int main(int argc, char *argv[])
 
 	}
 	printf("%ld\n", maxsize);
+	return 0;
 }

@@ -10,6 +10,8 @@
 // The comparator cmp(type* left, type* right) must return 0 if right is sorted before left,
 // 1 otherwise
 
+// For an annotated version, please checkout day 5,
+// which contains a non-macro version
 
 
 // Merge sort

@@ -7,33 +7,41 @@ int main(int argc, char* argv[])
 	long from;
 	long to;
 	long sum  = 0;
-	while (scanf("%ld%*[-]%ld", &from , &to) != EOF) {
-		getchar(); // skip 1 character
-		printf("Processing: %ld to %ld\n", from, to);
 
+	// Read next range
+	while (scanf("%ld%*[-]%ld", &from , &to) != EOF) {
+
+		// Skip separator
+		getchar(); 
+
+		// Assume that the ranges are managable small to iterate (should have
+		// Should have done same approach in previous exercise
 		for (long liter = from ; liter <= to; liter++) {
 			// A long fits easily in 100 positions
 			char buf[100];
 			sprintf(buf, "%ld", liter);
 
 			int numdigits = strlen(buf);
+
+			// Try to find pattern with "skip" length
 			for (int skip = 1; skip < numdigits; skip++) {
-				/* Must fit whole times */
+
+				// Must fit whole times
 				if (numdigits % skip)
 					continue;
+
+				// Assume match
 				int match = 1;
 				for (int pos = 0; pos < numdigits - skip; pos++)
-					if(buf[pos+skip] != buf[pos]) {
+					// until proven otherwise
+					if(buf[pos+skip] != buf[pos])
 						match = 0;
-					}
+
 				if (match) {
-					printf("match: %s\n", buf);
 					sum += liter;
 					// Break out: no need to check with other skip values
 					break;
 				}
-				
-
 			}
 
 		}

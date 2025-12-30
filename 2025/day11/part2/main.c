@@ -79,7 +79,6 @@ void connectdevices(char *from, char *to)
 // Mark strategy to mark inputs or outputs of a device
 void mark(struct device* device, int up, int marker)
 {
-	printf("Marking: %s\n", device->name);
 	// Indien mark al gezet, dan overslaan
 	if (device->mark & marker)
 		return;
@@ -122,7 +121,6 @@ int main (int argc, char *argv[])
 {
 	char line[MAXLINE];
 	while (fgets(line, sizeof line, stdin) != NULL) {
-		printf ("%s", line);
 		char* strtok_handler1 = NULL;
 		char* strtok_handler2 = NULL;
 		char* name = strtok_r(line, ":", &strtok_handler1);
@@ -130,17 +128,6 @@ int main (int argc, char *argv[])
 		for (char *outputname = strtok_r(outputs, " ", &strtok_handler2); outputname; outputname = strtok_r(NULL, " ", &strtok_handler2))
 			connectdevices(name, outputname);
 	}
-
-	printf ("-----------------------\n");
-	for (struct device* d = devicelist; d; d =d->next) {
-		printf ("%s:", d->name);
-		for(int i = 0; i < MAXCONNECTEDDEVICES && d->outputdevices[i]; i++)
-			printf(" %s", d->outputdevices[i]->name);
-		printf("\n");
-	}
-	printf ("-----------------------\n");
-		
-	
 
 	struct device* fft = finddevice("fft");
 	struct device* dac = finddevice("dac");

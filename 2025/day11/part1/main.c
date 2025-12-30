@@ -7,10 +7,13 @@
 #define MAXCONNECTEDDEVICES 100
 #define MAXLINE 1000
 
+// Structure for keeping device information
 struct device {
-	struct device* next;
+	struct device* next; // Linked list!
 	char *name;
+	// NULL terminated array of input devices
 	struct device* inputdevices[MAXCONNECTEDDEVICES];
+	// NULL terminated array of output devices
 	struct device* outputdevices[MAXCONNECTEDDEVICES];
 };
 
@@ -25,6 +28,7 @@ struct device* finddevice(char *name)
 	return result;
 }
 
+// find device. If not found, create device
 struct device *upsertdevice(char *name)
 {
 	struct device* result = finddevice(name);
@@ -39,6 +43,8 @@ struct device *upsertdevice(char *name)
 	return result;
 }
 
+// Find/create devices <from> and <to>
+// Connect devices
 void connectdevices(char *from, char *to)
 {
 	struct device* fromdevice = upsertdevice(from);
@@ -53,10 +59,13 @@ void connectdevices(char *from, char *to)
 	fromdevice->outputdevices[i] = todevice;
 }
 
+// Naive recursive approach to count number of paths
 int countpaths(struct device *device) {
-	printf ("Counting %s\n", device->name);
+	// Stop recursion at "out"
 	if (!strcmp(device->name, "out"))
 		return 1;
+
+	// Recursion may also stop when a device has no outputs
 	int count = 0;
 	for(int i = 0; i < MAXCONNECTEDDEVICES && device->outputdevices[i]; i++)
 		count += countpaths(device->outputdevices[i]);
@@ -67,27 +76,21 @@ int main (int argc, char *argv[])
 {
 	char line[MAXLINE];
 	while (fgets(line, sizeof line, stdin) != NULL) {
-		printf ("%s", line);
 		char* strtok_handler1 = NULL;
 		char* strtok_handler2 = NULL;
+		// Get name before colon
 		char* name = strtok_r(line, ":", &strtok_handler1);
+		// Get outputs after colon
 		char* outputs = strtok_r(NULL, ":\n", &strtok_handler1);
+
+		// split outputs using " " and "\n" as separators
 		for (char *outputname = strtok_r(outputs, " ", &strtok_handler2); outputname; outputname = strtok_r(NULL, " ", &strtok_handler2))
 			connectdevices(name, outputname);
 	}
 
-	printf ("-----------------------\n");
-	for (struct device* d = devicelist; d; d =d->next) {
-		printf ("%s:", d->name);
-		for(int i = 0; i < MAXCONNECTEDDEVICES && d->outputdevices[i]; i++)
-			printf(" %s", d->outputdevices[i]->name);
-		printf("\n");
-	}
-	printf ("-----------------------\n");
-		
-	
-
+	// Get the "you" device
 	struct device* you = finddevice("you");
+
 	printf ("nr of paths = %d\n", countpaths(you));
 	return 0;
 }

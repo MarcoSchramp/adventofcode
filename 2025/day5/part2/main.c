@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Structure to hold range
 struct range {
 	long from;
 	long to;
 	struct range *next;
 } *rangelist = NULL;
 
+// Add range to rangelist
 void addrange(long from, long to)
 {
 	struct range* r = malloc(sizeof (*r));
@@ -17,34 +19,24 @@ void addrange(long from, long to)
 	rangelist = r;
 }
 
-struct range* inrange(long id)
-{
-	struct range *r = rangelist;
-	while (r) {
-		if (r->from <= id && id <= r->to)
-			return r;
-		r = r->next;
-	}
-	return NULL;
-}
-
-void printlist(struct range *r, char *s) 
-{
-	printf ("------ %s ----\n", s);
-	for (; r; r = r->next)
-		printf ("%15ld - %15ld\n", r->from , r->to);
-}
 
 // Merge sort
+// Sort list of ranges, algorithm: merge-sort
+// returns pointer to first element in sorted list
 struct range* sortlist(struct range* r)
 {
+	// Cannot sort empty list
 	if (r == NULL) return r;
+	// No need to sort a list of one item
 	if (r->next == NULL) return r;
-	int i = 0;
+
+
+	// Split lists in two equal halfs, both unsorted
 	struct range *right = NULL;
 	struct range *left = NULL;
 
-	//split
+	// i is used to switch between left or right list
+	int i = 0;
 	while (r) {
 		struct range *n = r->next;
 		if ((i++) % 2) {
@@ -58,47 +50,49 @@ struct range* sortlist(struct range* r)
 		r = n;
 	}
 
-	// sort each list
+	// sort each list (recursive)
 	left = sortlist(left);
 	right = sortlist(right);
 
 	// Start merging;
-	printlist(left, "Left");
-	printlist(right, "Right");
+
+	// introducing r
 	struct range **rtarget = &r;
 	while (left || right) {
+		// When there's still left & right, then compare
 		if (left && right) {
 			if (left->from < right->from) {
-				printf("Adding %ld\n", left->from);
 				*rtarget = left;
 				rtarget = &(left->next);
 				left = left->next;
 			}
 			else {
-				printf("Adding %ld\n", right->from);
 				*rtarget = right;
 				rtarget = &(right->next);
 				right = right->next;
 			}
 		}
+		// Only left items remaining --> add left
 		else if (left) {
-			printf("Adding %ld\n", left->from);
 			*rtarget = left;
 			rtarget = &(left->next);
 			left = left->next;
 		}
+		// Only right items remaining --> add right
 		else { // right
-			printf("Adding %ld\n", right->from);
 			*rtarget = right;
 			rtarget = &(right->next);
 			right = right->next;
 		}
 	}
 	*rtarget = NULL; // Null terminate the list!
-	printlist(r, "Merged");
 	return r;
 }
 
+// If current and next are overlapping ranges, then
+// merge into one range
+// returns next in case of no merge
+// returns current in case of merge (free next)
 struct range* mergerange(struct range *current, struct range* next)
 {
 	if (next == NULL) return NULL;
@@ -113,7 +107,9 @@ struct range* mergerange(struct range *current, struct range* next)
 
 int main(int argc, char* argv[])
 {
+	// Line buffer
 	char line[1024];
+
 
 	while (fgets(line, sizeof line, stdin) != NULL) {
 		// break on empty line
@@ -128,15 +124,17 @@ int main(int argc, char* argv[])
 		// add range
 		addrange(from, to);
 	}
-	rangelist = sortlist(rangelist);
-	printlist(rangelist, "final");
 
+	// sort the range list in ascending order
+	rangelist = sortlist(rangelist);
+
+	// Merge range into next when overlapping
 	struct range* r = rangelist;
 	while (r) 
 		r = mergerange(r, r->next);
 
-	printlist(rangelist, "reduced");
 
+	// Walk the list and count the number of valid ids
 	long idcount = 0;
 	for (struct range*r = rangelist; r; r=r->next)
 		idcount += r->to - r->from  + 1;
