@@ -2,13 +2,6 @@
 #include "md5.h"
 #include<stdio.h>
 
-void print_hash(uint8_t *p){
-    for(int i = 0; i < 16; ++i){
-        printf("%02x", p[i]);
-    }
-    printf("\n");
-}
-
 int main(int argc, char* argv[])
 {
 	uint8_t hash[16];
@@ -27,8 +20,7 @@ int main(int argc, char* argv[])
 		
 	} while (1);
 
-	printf("%ld --> %s --> ", i, buffer);
-	print_hash(hash);
+	printf("%ld", i);
 
 	return 0;
 }

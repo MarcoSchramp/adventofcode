@@ -1,0 +1,38 @@
+
+/* For those who didn't recognize it: the lights follow the same
+ * rules as in Conways Game of Life (check wikipedia)
+ */
+
+#include<stdio.h>
+#include<string.h>
+
+#define MAX_GRIDSIZE 1000
+
+char* grid[MAX_GRIDSIZE];
+char* countgrid[MAX_GRIDSIZE];
+int gridheight = 0;
+int gridwidth = 0;
+
+
+int main(int argc, char* argv[])
+{
+	char line[1024];
+	int pos;
+	char
+
+	while(fgets(line, sizeof line, stdin) != NULL) {
+		// Overwrite possible newline with zero terminator
+		if (strchr(line, '\n'))
+			*strchr(line, '\n') = 0;
+		grid[gridheight++] = strdup(line);
+		if (gridwidth && gridwidth != strlen(line)) {
+			printf ("Non-rectangular input!!!\n");
+			exit(-1);
+		}
+		if (!gridwidth) gridwidth = strlen(line)
+	}
+	for (int i = 0; i < gridheight; i++)
+		printf("%s\n", grid[i]);
+		
+		
+}

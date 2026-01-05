@@ -46,7 +46,6 @@ struct node* upsert_node(char *name)
 {
 	struct node* n = find_node(name);
 	if (!n) {
-		printf ("Node %s not found --> adding\n", name);
 		n = malloc (sizeof *n);
 		n-> in = NULL;
 		memset(n->out, 0, sizeof n->out);
@@ -132,13 +131,11 @@ int main(int argc, char* argv[])
 		// First token must either be a token, or a NOT operation
 		char* token = strtok(line, " \n");
 		if (!strcmp(token, "NOT")) {
-			printf("NOT!!\n");
 			op = OP_NOT;
 			token = strtok(NULL, " \n");	
 		}
 
 		in1 = upsert_node(token);
-		printf("First variable = %s\n", in1->name);
 
 		token = strtok(NULL, " \n");
 
@@ -156,7 +153,6 @@ int main(int argc, char* argv[])
 			// After operation must be another node reference
 			token = strtok(NULL, " \n");
 			in2 = upsert_node(token);
-			printf("Second variable = %s\n", in2->name);
 
 			// Then there must be a -> operation
 			token = strtok(NULL, " \n");
@@ -166,16 +162,12 @@ int main(int argc, char* argv[])
 
 		token = strtok(NULL, " \n");
 		out = upsert_node(token);
-		printf("Third variable = %s\n", out->name);
 
 		new_operation(op, in1, in2, out);
 		
 	}
-	printf("start eval\n");
 
 	struct node* a = find_node("a");
-	printf ("Node a found: %d\n", a != NULL);
-
 	printf("eval(a) = %ld\n", evalnode(a));
 
 	return 0;
