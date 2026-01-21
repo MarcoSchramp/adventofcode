@@ -1,82 +1,139 @@
 #include<stdio.h>
 
-struct spell {
-	char *name;
-	int cost;
-	int damage;
-	int heal;
-	int armor;
-	int mana;
-	int lasting; // -1 --> immediate effect, no countdown needed
-};
-
-struct activespell {
-	struct activespell* next;
-	struct spell *spell;
-	int	lasting;
-}
-	
-
-struct spell spells[] = {
-	{ "MagicMissile",      53, 4, 0, 0, 0, -1},
-	{ "Drain",             73, 2, 2, 0, 0, -1},
-	{ "Shield",           113, 0, 0, 7, 0, 6},
-	{ "Poisson",          173, 3, 0, 0, 0, 6},
-	{ "Recharge",         229, 0, 0, 0, 101, 5 }
-};
 #define MAGICMISSILE 0
 #define DRAIN        1
 #define SHIELD       2
-#define POISSON      3
-#define RECHARGE"    4
-
-#define spellcount ((int) (sizeof spells / sizeof *spells))
+#define POISON      3
+#define RECHARGE    4
+#define MAXSPELL    5
 
 struct player {
 	int mana;
 	int armor;
 	int hitpoints;
-	int activespells[spellcount];
+	int activespells[MAXSPELL];
 };
 
 // Returns 1 when spell remains active
-int applyspell(struct player* player, struct player* opponent, int instant)
+int applyspell(struct player* player, struct player* opponent, int spell)
 {
-	if (instant && player->activespells[MAGICMISSILE]) {
-		int totaldamage = activespell-->damage - opponent->armor;
+	if (spell == MAGICMISSILE && player->mana >= 53) {
+		int totaldamage = 4 - opponent->armor;
 		if (totaldamage <= 0) totaldamage = 1;
 		opponent->hitpoints -= totaldamage;
-		player->activespells[MAGICMISSILE] = 0;
+		player->mana -= 53;
+		return 53;
 	}
-	if (instant && player->activespells[DRAIN]) {
-		int totaldamage = activespell-->damage - opponent->armor;
+	if (spell == DRAIN && player->mana >= 73)  {
+		int totaldamage = 2 - opponent->armor;
 		if (totaldamage <= 0) totaldamage = 1;
 		opponent->hitpoints -= totaldamage;
-		player->activespells[DRAIN] = 0;
+		player->hitpoints += 2;
+		player->mana -= 73;
+		return 73;
 	}
-
-	if (activespell->damage) {
-
-		// When damage applied there is at least 1 damage made
+	if (spell == SHIELD && player->mana >= 113 && player->activespells[SHIELD] == 0) {
+		player->activespells[SHIELD] = 6;
+		player->armor = 7;
+		player->mana -= 113;
+		return 113;
 	}
-
-	player->hitpoints += activespell->spell->heal;
+	if (spell == POISON && player->mana >= 173 && player->activespells[POISON] == 0) {
+		player->activespells[POISON] = 6;
+		player->mana -= 173;
+		return 173;
+	}
+	if (spell == RECHARGE && player->mana >= 229 && player->activespells[RECHARGE] == 0) {
+		player->activespells[RECHARGE] = 5;
+		player->mana -= 229;
+		return 229;
+	}
+	return 0;
 }
-int playgame(struct player player, struct player boss)
-{
-	int bossdown = player.damage - boss.armor;
-	int playerdown = boss.damage - player.armor;
-	if (bossdown < 0) bossdown = 0;
-	if (playerdown < 0) playerdown = 0;
 
-	// 
-	if (bossdown == 0 && playerdown == 0)
-		return 2;
-	while(1) {
-		boss.score -= bossdown;
-		if (boss.score <= 0) return 1;
-		player.score -= playerdown;
-		if (player.score <= 0) return 0;
+void applybossspell(struct player* player, struct player* opponent)
+{
+	// Boss can only do one thing
+	int totaldamage = 9 - player->armor;
+	if (totaldamage <= 0) totaldamage = 1;
+		player->hitpoints -= totaldamage;
+}
+
+void preroundeffect(struct player* player, struct player* opponent)
+{
+	if (player->activespells[SHIELD])
+		--player->activespells[SHIELD];
+	else
+		player->armor = 0;
+	if (player->activespells[POISON]) {
+		--player->activespells[POISON];
+		opponent->hitpoints -= 3;
+	}
+	if (player->activespells[RECHARGE]) {
+		--player->activespells[RECHARGE];
+		player->mana += 101;
+	}
+}
+
+
+int maxmana = 1000000;
+void playerround(int spend, struct player player, struct player boss);
+void bossround(int spend, struct player player, struct player boss);
+
+// returns mana consumed
+void bossround(int spend, struct player player, struct player boss)
+{
+	if (spend > maxmana)
+		return;
+	preroundeffect(&player, &boss);
+	if (player.hitpoints <= 0)
+		return;
+	else if (boss.hitpoints <= 0) {
+		if (spend < maxmana)
+			maxmana = spend;
+		return;
+	}
+	applybossspell(&player, &boss);
+	if (player.hitpoints <= 0)
+		return;
+	else if (boss.hitpoints <= 0 ) {
+		if (spend < maxmana)
+			maxmana = spend;
+		return;
+	}
+	else
+		playerround(spend, player, boss);
+}
+void playerround(int spend, struct player player, struct player boss)
+{
+	// no need to go any further
+	if (spend > maxmana)
+		return;
+	preroundeffect(&player, &boss);
+	if (player.hitpoints <= 0)
+		return;
+	else if (boss.hitpoints <= 0) {
+		if (spend < maxmana)
+			maxmana = spend;
+		return;
+	}
+	for (int spell = 0; spell < MAXSPELL; spell++) {
+		struct player nextplayer = player;
+		struct player nextboss = boss;
+		int spellspend = applyspell(&nextplayer, &nextboss, spell);
+		if (spellspend) {
+			if (player.hitpoints <= 0) {
+				// skip this
+			}
+			else if (boss.hitpoints <= 0) {
+				if (spend < maxmana)
+					maxmana = spend;
+				return;
+			}
+			else {
+				bossround(spend+spellspend, nextplayer, nextboss);
+			}
+		}
 	}
 }
 
@@ -84,40 +141,19 @@ int playgame(struct player player, struct player boss)
 
 int main(int argc, char* argv[])
 {
-	struct player boss = { 104, 8, 1 };
-	int mincost = 100000;
-	for (int weapon = 0; weapon < weaponcount; weapon++) {
-		for (int armor = -1; armor < armorcount; armor++) {
-			for (int ring1 = -1 ; ring1 < ringcount; ring1++) {
-				for (int ring2 = ring1 +1 ; ring2 <= ringcount; ring2++) {
-					struct spell* selectedweapons[4];
-					struct spell** w = selectedweapons;
-					*(w++) = &weapons[weapon];
-					if (armor != -1) *(w++) = &armors[armor];
-					if (ring1 != -1) *(w++) = &rings[ring1];
-					if (ring2 != ringcount) *(w++) = &rings[ring2];
-					struct player player = { 100, 0, 0 };
-					int cost = 0;
-					for (w--;w >= selectedweapons; w--) {
-						cost += (*w)->cost;
-						player.damage += (*w)->damage;
-						player.armor += (*w)->armor;
-					}
-					// No need to play the game when the cost is more then
-					// the minimum cost so far....
-					if (cost < mincost) {
-						int won = playgame(player, boss);
-						if (won == 1)
-							mincost = cost;
-					}
-	
-				}
-
-			}
-		}
-	}
-	printf("Mincost = %d\n", mincost);
-
-	return 0;
+	struct player player = {
+		500 /* mana */, 
+		0 /* armor */,
+		50 /* hitpoints */,
+		{ 0, 0, 0, 0, 0} /* activespells[MAXSPELL] */
+	};
+	struct player boss = {
+		500 /* mana */, 
+		0 /* armor */,
+		51 /* hitpoints */,
+		{ 0, 0, 0, 0, 0} /* activespells[MAXSPELL] */
+	};
+	playerround(0, player, boss);
+	printf ("Minspend = %d\n", maxmana);
 }
 
