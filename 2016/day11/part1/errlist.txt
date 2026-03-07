@@ -1,0 +1,143 @@
+main.c:113:51: warning: ISO C forbids forward parameter declarations [-Wpedantic]
+  113 | struct systemstatelist* newsystemstatelist(struct systemstatelist** root; struct systemstate* systemstate, int stepno)
+      |                                                   ^~~~~~~~~~~~~~~
+main.c:113:69: error: parameter ‘root’ has just a forward declaration
+  113 | struct systemstatelist* newsystemstatelist(struct systemstatelist** root; struct systemstate* systemstate, int stepno)
+      |                                            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+main.c: In function ‘newsystemstatelist’:
+main.c:116:22: error: ‘root’ undeclared (first use in this function)
+  116 |         new->next = *root;
+      |                      ^~~~
+main.c:116:22: note: each undeclared identifier is reported only once for each function it appears in
+main.c: In function ‘takesystemstatelist’:
+main.c:124:41: error: invalid initializer
+  124 |         struct systemstatelist result = *root;
+      |                                         ^
+main.c:126:16: error: incompatible types when returning type ‘struct systemstatelist’ but ‘struct systemstatelist *’ was expected
+  126 |         return result;
+      |                ^~~~~~
+main.c: In function ‘processpotentials’:
+main.c:133:17: error: ‘reurn’ undeclared (first use in this function)
+  133 |                 reurn -1;
+      |                 ^~~~~
+main.c:137:22: error: ‘systemsate’ undeclared (first use in this function); did you mean ‘systemstate’?
+  137 |                 if ((systemsate->floorstate[floor].chip_state & takelong->floorstate.chip_state) == takealong->floorstate.chip_state) &&
+      |                      ^~~~~~~~~~
+      |                      systemstate
+main.c:137:65: error: ‘takelong’ undeclared (first use in this function); did you mean ‘takealong’?
+  137 |                 if ((systemsate->floorstate[floor].chip_state & takelong->floorstate.chip_state) == takealong->floorstate.chip_state) &&
+      |                                                                 ^~~~~~~~
+      |                                                                 takealong
+main.c:138:21: error: expected identifier before ‘(’ token
+  138 |                     (systemsate->floorstate[floor].generator_state & takelong->floorstate.generator_state) == takealong->floorstate.generator_state)) {
+      |                     ^
+main.c:138:148: error: expected statement before ‘)’ token
+  138 |                     (systemsate->floorstate[floor].generator_state & takelong->floorstate.generator_state) == takealong->floorstate.generator_state)) {
+      |                                                                                                                                                    ^
+main.c:138:149: error: expected statement before ‘)’ token
+  138 |                     (systemsate->floorstate[floor].generator_state & takelong->floorstate.generator_state) == takealong->floorstate.generator_state)) {
+      |                                                                                                                                                     ^
+main.c:162:92: warning: left-hand operand of comma expression has no effect [-Wunused-value]
+  162 |                                 if (issafe[targetsystemstate.floorstate[floor-1].chip_state, targetsystemstate.floorstate[floor-1].generator_state]) {
+      |                                                                                            ^
+main.c:162:43: error: subscripted value is neither array nor pointer nor vector
+  162 |                                 if (issafe[targetsystemstate.floorstate[floor-1].chip_state, targetsystemstate.floorstate[floor-1].generator_state]) {
+      |                                           ^
+main.c:165:96: error: incompatible type for argument 1 of ‘findsystemstatelist’
+  165 |                                         struct systemstatlist *duplicate = findsystemstatelist(targetsystemstate);
+      |                                                                                                ^~~~~~~~~~~~~~~~~
+      |                                                                                                |
+      |                                                                                                struct systemstate
+main.c:104:65: note: expected ‘struct systemstate *’ but argument is of type ‘struct systemstate’
+  104 | struct systemstatelist* findsystemstatelist(struct systemstate* systemstate)
+      |                                             ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+main.c:168:125: error: expected ‘)’ before ‘;’ token
+  168 |                                                 struct systemstatelist* newpotential = newsystemstatelist(systemstatelistend; targetystemstate, potential->stepno + 1);
+      |                                                                                                          ~                  ^
+      |                                                                                                                             )
+main.c:168:107: warning: passing argument 1 of ‘newsystemstatelist’ from incompatible pointer type [-Wincompatible-pointer-types]
+  168 |                                                 struct systemstatelist* newpotential = newsystemstatelist(systemstatelistend; targetystemstate, potential->stepno + 1);
+      |                                                                                                           ^~~~~~~~~~~~~~~~~~
+      |                                                                                                           |
+      |                                                                                                           struct systemstatelist **
+main.c:113:95: note: expected ‘struct systemstate *’ but argument is of type ‘struct systemstatelist **’
+  113 | struct systemstatelist* newsystemstatelist(struct systemstatelist** root; struct systemstate* systemstate, int stepno)
+      |                                                                           ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+main.c:168:88: error: too few arguments to function ‘newsystemstatelist’
+  168 |                                                 struct systemstatelist* newpotential = newsystemstatelist(systemstatelistend; targetystemstate, potential->stepno + 1);
+      |                                                                                        ^~~~~~~~~~~~~~~~~~
+main.c:113:25: note: declared here
+  113 | struct systemstatelist* newsystemstatelist(struct systemstatelist** root; struct systemstate* systemstate, int stepno)
+      |                         ^~~~~~~~~~~~~~~~~~
+main.c:168:73: warning: unused variable ‘newpotential’ [-Wunused-variable]
+  168 |                                                 struct systemstatelist* newpotential = newsystemstatelist(systemstatelistend; targetystemstate, potential->stepno + 1);
+      |                                                                         ^~~~~~~~~~~~
+main.c:200:92: warning: left-hand operand of comma expression has no effect [-Wunused-value]
+  200 |                                 if (issafe[targetsystemstate.floorstate[floor+1].chip_state, targetsystemstate.floorstate[floor+1].generator_state]) {
+      |                                                                                            ^
+main.c:200:43: error: subscripted value is neither array nor pointer nor vector
+  200 |                                 if (issafe[targetsystemstate.floorstate[floor+1].chip_state, targetsystemstate.floorstate[floor+1].generator_state]) {
+      |                                           ^
+main.c:202:96: error: incompatible type for argument 1 of ‘findsystemstatelist’
+  202 |                                         struct systemstatlist *duplicate = findsystemstatelist(targetsystemstate);
+      |                                                                                                ^~~~~~~~~~~~~~~~~
+      |                                                                                                |
+      |                                                                                                struct systemstate
+main.c:104:65: note: expected ‘struct systemstate *’ but argument is of type ‘struct systemstate’
+  104 | struct systemstatelist* findsystemstatelist(struct systemstate* systemstate)
+      |                                             ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+main.c:205:107: error: ‘potentiallistend’ undeclared (first use in this function); did you mean ‘potentiallist’?
+  205 |                                                 struct systemstatelist* newpotential = newsystemstatelist(potentiallistend; targetystemstate, potential->stepno + 1);
+      |                                                                                                           ^~~~~~~~~~~~~~~~
+      |                                                                                                           potentiallist
+main.c:205:123: error: expected ‘)’ before ‘;’ token
+  205 |                                                 struct systemstatelist* newpotential = newsystemstatelist(potentiallistend; targetystemstate, potential->stepno + 1);
+      |                                                                                                          ~                ^
+      |                                                                                                                           )
+main.c:205:88: error: too few arguments to function ‘newsystemstatelist’
+  205 |                                                 struct systemstatelist* newpotential = newsystemstatelist(potentiallistend; targetystemstate, potential->stepno + 1);
+      |                                                                                        ^~~~~~~~~~~~~~~~~~
+main.c:113:25: note: declared here
+  113 | struct systemstatelist* newsystemstatelist(struct systemstatelist** root; struct systemstate* systemstate, int stepno)
+      |                         ^~~~~~~~~~~~~~~~~~
+main.c:205:73: warning: unused variable ‘newpotential’ [-Wunused-variable]
+  205 |                                                 struct systemstatelist* newpotential = newsystemstatelist(potentiallistend; targetystemstate, potential->stepno + 1);
+      |                                                                         ^~~~~~~~~~~~
+main.c: In function ‘main’:
+main.c:218:9: warning: implicit declaration of function ‘initmatrix’; did you mean ‘initsafematrix’? [-Wimplicit-function-declaration]
+  218 |         initmatrix();
+      |         ^~~~~~~~~~
+      |         initsafematrix
+main.c:234:80: error: expected ‘)’ before ‘;’ token
+  234 |         struct systemstatelist* initssl = newsystemstatelist(systemstatelistend; &initialsystemstate, 0);
+      |                                                             ~                  ^
+      |                                                                                )
+main.c:234:62: warning: passing argument 1 of ‘newsystemstatelist’ from incompatible pointer type [-Wincompatible-pointer-types]
+  234 |         struct systemstatelist* initssl = newsystemstatelist(systemstatelistend; &initialsystemstate, 0);
+      |                                                              ^~~~~~~~~~~~~~~~~~
+      |                                                              |
+      |                                                              struct systemstatelist **
+main.c:113:95: note: expected ‘struct systemstate *’ but argument is of type ‘struct systemstatelist **’
+  113 | struct systemstatelist* newsystemstatelist(struct systemstatelist** root; struct systemstate* systemstate, int stepno)
+      |                                                                           ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+main.c:234:43: error: too few arguments to function ‘newsystemstatelist’
+  234 |         struct systemstatelist* initssl = newsystemstatelist(systemstatelistend; &initialsystemstate, 0);
+      |                                           ^~~~~~~~~~~~~~~~~~
+main.c:113:25: note: declared here
+  113 | struct systemstatelist* newsystemstatelist(struct systemstatelist** root; struct systemstate* systemstate, int stepno)
+      |                         ^~~~~~~~~~~~~~~~~~
+main.c:238:17: warning: implicit declaration of function ‘processpotential’; did you mean ‘processpotentials’? [-Wimplicit-function-declaration]
+  238 |         while (!processpotential())
+      |                 ^~~~~~~~~~~~~~~~
+      |                 processpotentials
+main.c:220:28: warning: variable ‘initialsystemstate’ set but not used [-Wunused-but-set-variable]
+  220 |         struct systemstate initialsystemstate;
+      |                            ^~~~~~~~~~~~~~~~~~
+main.c: In function ‘newsystemstatelist’:
+main.c:120:1: warning: control reaches end of non-void function [-Wreturn-type]
+  120 | }
+      | ^
+main.c: In function ‘takesystemstatelist’:
+main.c:127:1: warning: control reaches end of non-void function [-Wreturn-type]
+  127 | }
+      | ^
