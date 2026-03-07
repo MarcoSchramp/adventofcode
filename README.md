@@ -9,7 +9,8 @@ only using the following libraries
 - <string.h> (because here are strcmp, strcpy, strdup, strtok, strtok_r, memset, memcpy)
 
 I don't provide a build-script. In most cases there is only one file (main.c), which should
-compile with your favorite C compiler. I've also provided the input I received from AoC,
+compile with your favorite C compiler. In case there's more than one, just mention all
+the C-files in the folder. I've also provided the input I received from AoC,
 but you probably received something different when you try this yourself.
 
-All programs read input from stdin.
+All programs read input from stdin. Programs with simple input, have their input hardcoded.
